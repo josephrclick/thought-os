@@ -1,104 +1,124 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# 🧠 Thought OS – Personal Knowledge & Capture System
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+Welcome to **Thought OS**, a voice-enabled, AI-enhanced interface to your brain — capturing what matters, organizing it invisibly, and helping you think clearly at scale.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+---
 
-## Features
+## 🎯 Purpose
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+**Thought OS** is built to:
 
-## Demo
+- Enable fast, flexible capture of thoughts, updates, and ideas (text, voice, audio)
+- Structure and store this data for later processing and querying
+- Use AI to enrich raw input with summaries, tags, insights, and next actions
+- Serve as a second brain + timeline of work, creativity, goals, and life events
+- Scale with minimal friction across desktop, mobile, and CLI interfaces
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+---
 
-## Deploy to Vercel
+## 🧱 Current Framework
 
-Vercel deployment will guide you through creating a Supabase account and project.
+### Tech Stack
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+| Layer | Stack |
+|-------|-------|
+| Frontend | Next.js + Tailwind (Vercel hosted) |
+| Backend | Supabase (PostgreSQL + Auth + Storage) |
+| Input Channels | Web UI, CLI (planned), Chrome Extension (planned) |
+| Voice Input | Web Speech API (for in-browser dictation) |
+| AI Enrichment | OpenAI API (future phase) |
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+### Core Data Model
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+#### `captures` Table (central thought/input log)
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | UUID | Unique identifier |
+| `created_at` | Timestamp | Auto-generated |
+| `source` | Text | Where the capture came from (e.g. `web_ui`, `cli`, `voice`) |
+| `raw_content` | Text | Main input field (text or voice transcript) |
+| `project_id` | FK → `projects.id` | Optional – assigns entry to project |
+| `tags` | Text[] | Optional tags for sorting/filtering |
+| `status` | Text | Workflow status (`new`, `processed`, etc.) |
+| `ai_summary` | Text | One-paragraph AI-generated summary |
+| `ai_entities` | JSONB | Structured AI output (action items, people, topics, etc.) |
 
-## Clone and run locally
+#### `projects` Table
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+| Field | Type |
+|-------|------|
+| `id` | UUID |
+| `name` | Text |
+| `description` | Text |
+| `status` | Text |
+| `created_at` | Timestamp |
 
-2. Create a Next.js app using the Supabase Starter template npx command
+---
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+## 🔮 Future State & Considerations
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+### AI Processing Layer
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+- Transcribe uploaded audio (Whisper or AssemblyAI)
+- Summarize and classify thoughts with GPT-4
+- Extract tasks, ideas, questions, blockers
+- Suggest project or tag assignment
 
-3. Use `cd` to change into the app's directory
+### Multi-Modal Capture
 
-   ```bash
-   cd with-supabase-app
-   ```
+- 🎤 Voice-only mode (`/fast-talk`)
+- 📱 Mobile optimization (or native app/PWA)
+- 🧑‍💻 CLI command-line capture (`thought "Update..." --project x`)
+- 🧠 Chrome extension to send content directly
 
-4. Rename `.env.example` to `.env.local` and update the following:
+### Output & Review Tools
 
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
+- 🗓️ Daily/weekly thought summaries
+- 🔎 Search + filter by tag/project/time
+- 📊 Effort/time tracking per project
+- 📁 Thought timeline / activity feed
 
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
+---
 
-5. You can now run the Next.js local development server:
+## 🧩 Open Design Considerations
 
-   ```bash
-   npm run dev
-   ```
+- Use structured tags or allow freeform? (currently freeform, AI-assisted tagging planned)
+- Support voice-only classification via keyword/hashtag detection?
+- How to handle audio file storage and transcription securely?
+- Will long-term thoughts be versioned, merged, or linked?
+- Data backup/export options (e.g., JSON, Markdown)?
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+---
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+## ⚠️ Known Limitations & Friction (As Scale Grows)
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+- Browser-only speech input doesn’t work on iOS Safari (Web Speech API)
+- Supabase row security + auth needs refinement as CLI/extension grow
+- Large scale AI processing may need queueing or external pipelines
+- Input structure might need schema updates (e.g., sub-tasks, linked entities)
+- As voice/audio use increases, storage & bandwidth costs may grow
 
-## Feedback and issues
+---
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+## 🛣️ Roadmap
 
-## More Supabase examples
+### ✅ MVP (Completed)
+- [x] Web capture form with structured input + freeform memo
+- [x] Project selection
+- [x] Tag input
+- [x] Voice dictation into memo field
+- [x] Supabase schema for `captures` + `projects`
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+### 🔜 In Progress / Next Steps
+- [ ] CLI input tool
+- [ ] Chrome extension capture
+- [ ] Mobile voice capture (PWA tweaks)
+- [ ] Daily summary UI or email digest
+
+### 🧠 AI Pipeline (Next Phase)
+- [ ] Auto-tagging and project assignment
+- [ ] Summarization + entity extraction
+- [ ] Audio file upload + Whisper transcription
+- [ ] Task extraction and to-do suggestions
+
